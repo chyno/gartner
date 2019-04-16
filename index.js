@@ -1,6 +1,9 @@
 const loadJsonFile = require('load-json-file');
 const R = require('ramda');
 
+
+const mindate = new Date('1970-01-01Z00:00:00:000');
+
 //Get the json data from file
 async function getData() {
     let alldata = await loadJsonFile('clicks.json');
@@ -10,6 +13,58 @@ async function getData() {
 }
 
 
+
+// Aggregating and sorting functions
+const maxClick = R.reduce(findMaxClick, { amount: -1, timestamp: mindate });
+const byIP = R.groupWith(ipEqual);
+const sortByIp = R.sortBy(R.compose(R.toLower, R.prop('ip')));
+
+// Runner code - run async because we are getting data async
+(async () => {
+    try {
+        var data = await getData();
+
+        // List of ip to be removed - more than 10
+        const ipsTobeRemoved = R.filter(x => geIpsToRemove(data).indexOf(x.ip) === -1);
+
+        // Compose function
+        let f = R.compose(
+            R.reduce(createArrayHash, []),
+            R.flatten,
+            R.map(R.map(maxClick)),
+            R.map(byIP),
+            R.map(sortByIp),
+            R.groupWith(hoursEqual),
+            ipsTobeRemoved);
+
+        // Call the function
+        let res = f(data);
+
+        // log answer
+        console.log('Each hash in the array has format - [period]_[ip]:{... click object}');
+        console.log(JSON.stringify(res));
+    } catch (e) {
+        console.error(e);
+        // Deal with the fact the chain failed
+    }
+})();
+
+
+// Export these for my unit tests
+//module.exports = { getData, byHour: byHour, maxClick, geIpsToRemove };
+
+
+// ************** Helper functions **************************************/
+
+function createArrayHash(acc, item) {
+    let month = (new Date(item.timestamp)).getHours() + 1;
+    let ip = item.ip;
+    let obj = {};
+    obj[month + '_' + ip] = item;
+    acc.push(obj)
+    return acc;
+
+}
 
 function hoursEqual(obj1, obj2) {
     const hour1 = (new Date(obj1.timestamp)).getHours();
@@ -47,49 +102,14 @@ function geIpsToRemove(data) {
 
     for (var property in res) {
         if (res.hasOwnProperty(property)) {
-
             if (res[property].length > 10) {
-                console.log('do not show this  - ' + property);
-                toRemove.push(property);
+                if (toRemove.indexOf(property) === -1) {
+                    //    console.log('do not show this ***  - ' + property);
+                    toRemove.push(property);
+                }
             }
 
         }
     }
     return toRemove;
 }
-// (a → String) → [a] → {String: [a]}
-const byHour = R.groupWith(hoursEqual);
-
-
-// ((a, b) → a) → a → [b] → a
-const maxClick = R.reduce(findMaxClick, { amount: -1 });
-const byIP = R.groupWith(ipEqual);
-
-
-var sortByIp = R.sortBy(R.compose(R.toLower, R.prop('ip')));
-
-(async () => {
-    try {
-        var data = await getData();
-        
-        const ipsTobeRemoved = R.filter(x => geIpsToRemove(data).indexOf(x.ip) === -1);
-
-        let f = R.compose(
-          R.flatten,
-          R.map(R.map(maxClick)),
-           R.map(byIP),
-            R.map(sortByIp),
-            byHour,
-            ipsTobeRemoved);
-
-        let res = f(data);
-        console.log(JSON.stringify(res));
-    } catch (e) {
-        console.error(e);
-        // Deal with the fact the chain failed
-    }
-})();
-
-
-// Export these for my unit tests
-module.exports = { getData, byHour: byHour, maxClick, geIpsToRemove };
