@@ -57,5 +57,27 @@ describe('clicks test', () => {
         expect(res.id).toBe(1);
         
       });
+
+      test('get new max tie most expensive get get the earliest',   () => {
+        const res = maxClick([
+            {
+                id: 0,
+                amount : 3.5,
+                timestamp:"3/11/2016 07:02:54"
+            },
+            {
+                id: 1,
+                amount : 3.5,
+                timestamp:"3/11/2016 08:02:54"
+            },
+            {
+                id: 2,
+                amount : 4,
+                timestamp:"3/11/2016 09:02:54"
+            }
+        ]);
+        expect(res.ip).toBe(1);
+        
+      });
    
   })
