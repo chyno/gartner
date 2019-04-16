@@ -1,0 +1,15 @@
+{
+  "name": "gartner",
+  "version": "1.0.0",
+  "description": "Grtner take home",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "solution" : "node index.js"
+  },
+  "author": "John Chynoweth",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^24.7.1"
+  }
+}
