@@ -1,32 +1,25 @@
 const getData = require('./index').getData;
-const getHour = require('./index').getHour;
 const byHour = require('./index').byHour;
 const maxClick = require('./index').maxClick;
+const byIP = require('./index').byIP;
+const geIpsToRemove = require('./index').geIpsToRemove;
+
 const R = require('ramda');
 
 describe('clicks test', () => {
   
-
     beforeEach(() => {
        
       });
-
    
-    test('it works', async () => {
+    test('it can get data', async () => {
       const data = await getData();
       expect(data).toBeDefined();
+     console.log(data);
       expect(Array.isArray(data)).toBeTruthy();
     });
 
-    //For each IP within each one hour period, only the most expensive click is placed into the result set.
-    test('get hour object',  () => {
-        const res =  getHour( {timestamp:"3/11/2016 02:02:58"});
-        expect(res).toBe(2);
 
-        const res2 =  getHour( {timestamp:"3/11/2016 04:12:22"});
-        expect(res2).toBe(4);
-        
-      });
 
       test('get list group by hour',  async () => {
         const data = await getData();
@@ -34,8 +27,8 @@ describe('clicks test', () => {
         const res =  byHour(data);
         expect(res).toBeTruthy();
 
-        console.log('**** Grouped object *****');
-        //console.log(res);
+     //   console.log('**** Grouped object *****');
+      //  console.log(res);
         
       });
 
@@ -58,7 +51,7 @@ describe('clicks test', () => {
         
       });
 
-      test('get new max tie most expensive get get the earliest',   () => {
+      test('get new max tick most expensive get get the earliest',   () => {
         const res = maxClick([
             {
                 id: 0,
@@ -72,11 +65,46 @@ describe('clicks test', () => {
             },
             {
                 id: 2,
-                amount : 4,
+                amount : 2,
                 timestamp:"3/11/2016 09:02:54"
             }
         ]);
-        expect(res.ip).toBe(1);
+        expect(res.id).toBe(0);
+        
+      });
+
+
+      test('get ip per hour',   () => {
+        const data =  [ { ip: '22.22.22.22', timestamp: '3/11/2016 02:02:58', amount: 7 },
+        { ip: '11.11.11.11',
+          timestamp: '3/11/2016 02:12:32',
+          amount: 6.5 },
+        { ip: '11.11.11.11',
+          timestamp: '3/11/2016 02:13:11',
+          amount: 7.25 },
+        { ip: '44.44.44.44',
+          timestamp: '3/11/2016 02:13:54',
+          amount: 8.75 } ];
+
+        const res = byIP(data);
+
+        expect(res).toBeTruthy();
+
+        //   console.log('**** Grouped object *****');
+        //    console.log(res);
+        
+      });
+
+      xtest('filter ips ',  async () => {
+        const data =   await getData();
+
+        const res =  geIpsToRemove(data);
+
+        
+        expect(res).toBeTruthy();
+
+         console.log('**** To be removed *****');
+        console.log(res);
         
       });
    
