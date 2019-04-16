@@ -1,6 +1,6 @@
 const loadJsonFile = require('load-json-file');
 const R = require('ramda');
-
+var fs = require('fs');
 
 const mindate = new Date('1970-01-01Z00:00:00:000');
 
@@ -39,6 +39,7 @@ const sortByIp = R.sortBy(R.compose(R.toLower, R.prop('ip')));
 
         // Call the function
         let res = f(data);
+        await fs.writeFileSync('./solution.json',JSON.stringify(res) , 'utf-8'); 
 
         // log answer
         console.log('Each hash in the array has format - [period]_[ip]:{... click object}');
@@ -53,7 +54,8 @@ const sortByIp = R.sortBy(R.compose(R.toLower, R.prop('ip')));
 // Export these for my unit tests
 
 
-
+// **************************************************** ************************************************************************************************************************************************************/
+// **************************************************** ************************************************************************************************************************************************************/
 // ************** Helper functions **************************************/
 
 function createArrayHash(acc, item) {

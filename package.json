@@ -13,6 +13,7 @@
     "jest": "^24.7.1"
   },
   "dependencies": {
+    "fs": "0.0.1-security",
     "ramda": "^0.26.1"
   }
 }
