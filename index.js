@@ -39,7 +39,7 @@ const sortByIp = R.sortBy(R.compose(R.toLower, R.prop('ip')));
 
         // Call the function
         let res = f(data);
-        await fs.writeFileSync('./solution.json',JSON.stringify(res) , 'utf-8'); 
+        await fs.writeFileSync('./results.json',JSON.stringify(res) , 'utf-8'); 
 
         // log answer
         console.log('Each hash in the array has format - [period]_[ip]:{... click object}');
