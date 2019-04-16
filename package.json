@@ -5,11 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "solution" : "node index.js"
+    "solution": "node index.js"
   },
   "author": "John Chynoweth",
   "license": "ISC",
   "devDependencies": {
     "jest": "^24.7.1"
+  },
+  "dependencies": {
+    "ramda": "^0.26.1"
   }
 }
