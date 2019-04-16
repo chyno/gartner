@@ -51,7 +51,7 @@ const sortByIp = R.sortBy(R.compose(R.toLower, R.prop('ip')));
 
 
 // Export these for my unit tests
-//module.exports = { getData, byHour: byHour, maxClick, geIpsToRemove };
+
 
 
 // ************** Helper functions **************************************/
@@ -113,3 +113,5 @@ function geIpsToRemove(data) {
     }
     return toRemove;
 }
+
+module.exports = { getData, maxClick, geIpsToRemove, byIP };

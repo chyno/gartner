@@ -1,7 +1,6 @@
 const getData = require('./index').getData;
-const byHour = require('./index').byHour;
 const maxClick = require('./index').maxClick;
-//const byIP = require('./index').byIP;
+const byIP = require('./index').byIP;
 const geIpsToRemove = require('./index').geIpsToRemove;
 
 const R = require('ramda');
@@ -21,16 +20,7 @@ describe('clicks test', () => {
 
 
 
-      test('get list group by hour',  async () => {
-        const data = await getData();
 
-        const res =  byHour(data);
-        expect(res).toBeTruthy();
-
-     //   console.log('**** Grouped object *****');
-      //  console.log(res);
-        
-      });
 
       test('get new max click',   () => {
         const res = maxClick([
@@ -74,7 +64,7 @@ describe('clicks test', () => {
       });
 
 
-      xtest('get ip per hour',   () => {
+      test('get ip per hour',   () => {
         const data =  [ { ip: '22.22.22.22', timestamp: '3/11/2016 02:02:58', amount: 7 },
         { ip: '11.11.11.11',
           timestamp: '3/11/2016 02:12:32',
@@ -95,7 +85,7 @@ describe('clicks test', () => {
         
       });
 
-      xtest('filter ips ',  async () => {
+      test('filter ips ',  async () => {
         const data =   await getData();
 
         const res =  geIpsToRemove(data);
@@ -103,8 +93,8 @@ describe('clicks test', () => {
         
         expect(res).toBeTruthy();
 
-         console.log('**** To be removed *****');
-        console.log(res);
+        // console.log('**** To be removed *****');
+       // console.log(res);
         
       });
    
