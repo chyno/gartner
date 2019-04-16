@@ -6,3 +6,5 @@
 ## I am into funcitonal programming and including my Angular applications - using RXJS.
 
 It is late time to go to bed.  Ibelieve it is correct.
+
+npm run test does not work on my windows machine?  If I run it using linux (window linux substem) the jest cmmand works. NOt sure why
