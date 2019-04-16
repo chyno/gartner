@@ -1,7 +1,7 @@
 const loadJsonFile = require('load-json-file');
 const R = require('ramda');
 
-//The result set should be stored in an array of hashes. Each hash should represent a click. T
+//Get the json data from file
 async function getData() {
     let alldata = await loadJsonFile('clicks.json');
     return alldata;
@@ -10,10 +10,11 @@ async function getData() {
 }
 
 
+
 function hoursEqual(obj1, obj2) {
     const hour1 = (new Date(obj1.timestamp)).getHours();
     const hour2 = (new Date(obj2.timestamp)).getHours();
-    return hour1 === hour2;
+    return (hour1 === hour2); //&& (obj1.ip === obj2.ip);
 }
 
 function ipEqual(obj1, obj2) {
@@ -65,19 +66,21 @@ const maxClick = R.reduce(findMaxClick, { amount: -1 });
 const byIP = R.groupWith(ipEqual);
 
 
+var sortByIp = R.sortBy(R.compose(R.toLower, R.prop('ip')));
 
 (async () => {
     try {
         var data = await getData();
-        const toRemove = geIpsToRemove(data);
-        const removeBadData = R.filter(x => toRemove.indexOf(x.ip) === -1);
+        
+        const ipsTobeRemoved = R.filter(x => geIpsToRemove(data).indexOf(x.ip) === -1);
 
         let f = R.compose(
-            R.flatten,
-            R.map(R.map(maxClick)),
-            R.map( R.groupWith(ipEqual)),
+          R.flatten,
+          R.map(R.map(maxClick)),
+           R.map(byIP),
+            R.map(sortByIp),
             byHour,
-            removeBadData);
+            ipsTobeRemoved);
 
         let res = f(data);
         console.log(JSON.stringify(res));
@@ -89,4 +92,4 @@ const byIP = R.groupWith(ipEqual);
 
 
 // Export these for my unit tests
-module.exports = { getData, byHour, byIP, maxClick, geIpsToRemove };
+module.exports = { getData, byHour: byHour, maxClick, geIpsToRemove };
